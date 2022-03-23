@@ -1,7 +1,7 @@
 import React from 'react';
 import MJ from 'react-mathjax-ts'
 import './App.css';
-import AdamsMethod from "./Methods/AdamsMethod";
+import axios from "axios";
 
 interface FormulaProps {
     equation: string
@@ -80,16 +80,20 @@ function App() {
         setInfo(false)
     }
 
-    const handleSolve = () => {
-        let y = new Array(3), xs = 0, xe = 0.1
-        let Adams
+    let args = {
+        y: [1., 0.1, 0.],
+        xs: .0,
+        xe: .1,
+        n: 3
+    }
 
-        for (let i = 0; i < 20; i++) {
-            Adams = new AdamsMethod(y, 3, xs, xe, 10, 0.001)
-            Adams.solution()
-            xs += 0.1;
-            xe += 0.1;
-        }
+    const handleSolve = async () => {
+        const res = await axios({
+            method: 'post',
+            url: 'http://localhost:5000/solveAdams',
+            data: args
+        });
+        console.log(res)
     }
 
   return (
