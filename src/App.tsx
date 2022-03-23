@@ -1,6 +1,7 @@
 import React from 'react';
 import MJ from 'react-mathjax-ts'
 import './App.css';
+import AdamsMethod from "./Methods/AdamsMethod";
 
 interface FormulaProps {
     equation: string
@@ -79,6 +80,18 @@ function App() {
         setInfo(false)
     }
 
+    const handleSolve = () => {
+        let y = new Array(3), xs = 0, xe = 0.1
+        let Adams
+
+        for (let i = 0; i < 20; i++) {
+            Adams = new AdamsMethod(y, 3, xs, xe, 10, 0.001)
+            Adams.solution()
+            xs += 0.1;
+            xe += 0.1;
+        }
+    }
+
   return (
     <div className="wrapper">
       <div className="main">
@@ -109,7 +122,7 @@ function App() {
                   </div>
               </div>
               <div className="buttons">
-                  <button className='solution'>Решение</button>
+                  <button className='solution' onClick={handleSolve}>Решение</button>
                   <button onClick={handleInfo} className='info'>Справка</button>
                   <button onClick={handleExamples} className='info'>Примеры</button>
               </div>
