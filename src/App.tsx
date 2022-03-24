@@ -2,6 +2,7 @@ import React from 'react';
 import MJ from 'react-mathjax-ts'
 import './App.css';
 import axios from "axios";
+import { MethodChart } from "./components/MethodChart";
 
 interface FormulaProps {
     equation: string
@@ -43,6 +44,7 @@ function App() {
     const [info, setInfo] = React.useState<boolean>(false)
     const [equation, setEquation] = React.useState<string>('')
     const [examples, setExamples] = React.useState<boolean>(false)
+    const [chartData, setChartData] = React.useState<any>(null)
 
     const handleDrop = () => {
         setDrop(!drop)
@@ -93,7 +95,8 @@ function App() {
             url: 'http://localhost:5000/solveAdams',
             data: args
         });
-        console.log(res)
+
+        setChartData(res.data)
     }
 
   return (
@@ -165,6 +168,7 @@ function App() {
                       <Formula equation={equation}/>
                   </div>
               </div>
+              {chartData && <MethodChart chartData={chartData} />}
           </div>
       </div>
     </div>
