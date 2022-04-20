@@ -96,6 +96,7 @@ function App() {
             data: args
         });
 
+        console.log(res.data)
         setChartData(res.data)
     }
 
