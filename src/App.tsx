@@ -1,15 +1,15 @@
 import React from 'react';
 import MJ from 'react-mathjax-ts'
 import './App.css';
-import axios from "axios";
 import { MethodChart } from "./components/MethodChart";
+import { RungeKutta } from "./components/RungeKutta";
+import { Table } from "./components/Table";
 
 interface FormulaProps {
-    equation: string
+    equation: any
 }
 
 export const Formula: React.FC<FormulaProps> = ({equation}) => {
-
     return (
         <div>
             <MJ.Context
@@ -31,7 +31,12 @@ export const Formula: React.FC<FormulaProps> = ({equation}) => {
                 }}
             >
                 <div>
-                    <MJ.Text text={`$$ ${equation} $$`}/>
+                    <MJ.Text text={`$$ y' = ${equation?.equation || ''} $$`}/>
+                    {equation?.equation2 && <MJ.Text text={`$$ x' = ${equation?.equation2 || ''} $$`}/>}
+                    <MJ.Text text={`$$ x ∈ [${equation?.from || ''}; ${equation?.to || ''}] $$`}/>
+                    {equation?.y && <MJ.Text text={`$$ y(0) = ${equation?.y || ''} $$`}/>}
+                    {equation?.yy && <MJ.Text text={`$$ x(0) = ${equation?.yy || ''} $$`}/>}
+                    <MJ.Text text={`$$ h = ${equation?.step || ''} $$`}/>
                 </div>
             </MJ.Context>
         </div>
@@ -41,20 +46,20 @@ export const Formula: React.FC<FormulaProps> = ({equation}) => {
 function App() {
     const [drop, setDrop] = React.useState<boolean>(false)
     const [chosenType, setChosenType] = React.useState<any>(null)
-    const [info, setInfo] = React.useState<boolean>(false)
-    const [equation, setEquation] = React.useState<string>('')
-    const [examples, setExamples] = React.useState<boolean>(false)
+    const [equation, setEquation] = React.useState<any>(null)
     const [chartData, setChartData] = React.useState<any>(null)
 
     const handleDrop = () => {
         setDrop(!drop)
     }
 
+    // Устанавливаем тип решаемого уравнения
     const setType = (type: any) => {
         setChosenType(type)
         handleDrop()
     }
 
+    // Сохраняем записанное пользователем уравнение
     const refactorEquation = (value: string) => {
         setEquation(value)
     }
@@ -64,41 +69,6 @@ function App() {
         {name: 'Альфа-устойчивый метод Рунге-Кутта', id: 'runge_kutta'},
     ]
 
-    const examplesArr = [
-        {name: 'Сумма', id: 'sum'},
-        {name: 'Интеграл', id: 'int'},
-        {name: 'Корень', id: 'sqrt'},
-        {name: 'Степень', id: 'pow'},
-        {name: 'Предел', id: 'lim'},
-    ]
-
-    const handleInfo = () => {
-        setInfo(!info)
-        setExamples(false)
-    }
-
-    const handleExamples = () => {
-        setExamples(!examples)
-        setInfo(false)
-    }
-
-    let args = {
-        y: [1., 0.1, 0.],
-        xs: .0,
-        xe: .1,
-        n: 3
-    }
-
-    const handleSolve = async () => {
-        const res = await axios({
-            method: 'post',
-            url: 'http://localhost:5000/solveAdams',
-            data: args
-        });
-
-        console.log(res.data)
-        setChartData(res.data)
-    }
 
   return (
     <div className="wrapper">
@@ -109,10 +79,6 @@ function App() {
                   <h2>(общее решение уравнения)</h2>
               </div>
               <div className="input">
-                  <input
-                      onChange={(e) => refactorEquation(e.target.value)}
-                      placeholder='Введите уравнение'
-                  />
                   <div className='solve'>
                       <input
                           onClick={handleDrop}
@@ -129,37 +95,14 @@ function App() {
                       </ul>}
                   </div>
               </div>
-              <div className="buttons">
-                  <button className='solution' onClick={handleSolve}>Решение</button>
-                  <button onClick={handleInfo} className='info'>Справка</button>
-                  <button onClick={handleExamples} className='info'>Примеры</button>
-              </div>
-              {examples && <div className='examples'>
-                  <ul>
-                      {examplesArr && examplesArr.map(example =>
-                        <li key={example.id}>{example.name}</li>
-                      )}
-                  </ul>
-              </div>}
-              {info && <div className='infoWrapper'>
-                  <h2>Справка</h2>
+              {chosenType?.id &&
+                  <RungeKutta
+                      refactorEquation={(value: string) => refactorEquation(value)}
+                      setChartData={(data: any) => setChartData(data)}
+                      type={chosenType?.id}
+                  />
+              }
 
-                  <ul>
-                      <li>Греческие буквы -
-                          <span>"alpha - &#945;", "beta - &#946;", "omega - &#969;"</span>
-                      </li>
-                      <li>Заглавные греческие буквы - <span>"Gamma - &#915;", "Delta - &#916;", "Omega - &#937;"</span></li>
-                      <li>Некоторые варианты для греческих букв - <span>"epsilon - &#949;", "phi - &#934;", "varphi - &#966;"</span></li>
-                      <li>Надстрочные и подстрочные индексы - <span>^ и _</span></li>
-                      <li>Группирование - <span>{}</span></li>
-                      <li>Обозначения - <span>infty - бесконечность</span></li>
-                      <li>Корни - <span>sqrt, sqrt[3]</span></li>
-                      <li>Скобки - <span>|x|, ||x||, (x), langle x rangle, ceil(x), floor(x), [x]</span></li>
-                      <li>Суммы и интегралы - <span>sum_1^k, sum_(i=0)^\infty i^2, prod, int, bigcup, bigcap</span></li>
-                      <li>Специальные функции - <span>lim_(x\to 0), lim, sinx, max, ln</span></li>
-                      <li>Специальные символы - <span>lt, gt, le, leq, ge, geq, ne</span></li>
-                  </ul>
-              </div>}
           </div>
           <div className="right">
               <h1>Решение</h1>
@@ -169,7 +112,9 @@ function App() {
                       <Formula equation={equation}/>
                   </div>
               </div>
+              {chartData && chartData?.time && <div className="time">Затраченное время: {Number(chartData.time) / 1000} с</div>}
               {chartData && <MethodChart chartData={chartData} />}
+              <Table chartData={chartData} />
           </div>
       </div>
     </div>
