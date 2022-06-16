@@ -117,6 +117,7 @@ function App() {
               <Table chartData={chartData} />
           </div>
       </div>
+      <div></div>
     </div>
   );
 }
