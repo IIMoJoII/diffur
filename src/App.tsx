@@ -9,6 +9,7 @@ interface FormulaProps {
     equation: any
 }
 
+
 export const Formula: React.FC<FormulaProps> = ({equation}) => {
     return (
         <div>
@@ -31,12 +32,18 @@ export const Formula: React.FC<FormulaProps> = ({equation}) => {
                 }}
             >
                 <div>
-                    <MJ.Text text={`$$ y' = ${equation?.equation || ''} $$`}/>
-                    {equation?.equation2 && <MJ.Text text={`$$ y' = ${equation?.equation2 || ''} $$`}/>}
-                    <MJ.Text text={`$$ x ∈ [${equation?.from || ''}; ${equation?.to || ''}] $$`}/>
-                    {equation?.y && <MJ.Text text={`$$ y(0) = ${equation?.y || ''} $$`}/>}
-                    {equation?.yy && <MJ.Text text={`$$ x(0) = ${equation?.yy || ''} $$`}/>}
-                    <MJ.Text text={`$$ h = ${equation?.step || ''} $$`}/>
+
+                    <div className="equationWrapper">
+                        <div>
+                            {equation?.equation && <MJ.Text text={`$$ y_1' = ${equation?.equation || ''} $$`}/>}
+                            {equation?.equation2 && <MJ.Text text={`$$ y_2' = ${equation?.equation2 || ''} $$`}/>}
+                            {equation?.y && <MJ.Text text={`$$ y_1(0) = ${equation?.y || ''} $$`}/>}
+                            {equation?.yy && <MJ.Text text={`$$ y_2(0) = ${equation?.yy || ''} $$`}/>}
+                        </div>
+                    </div>
+
+                    {(equation?.from || equation?.to) && <MJ.Text text={`$$ x ∈ [${equation?.from || ''}; ${equation?.to || ''}] $$`}/>}
+                    {equation?.step && <MJ.Text text={`$$ h = ${equation?.step || ''} $$`}/>}
                 </div>
             </MJ.Context>
         </div>
@@ -80,7 +87,9 @@ function App() {
               </div>
               <div className="input">
                   <div className='solve'>
+                      <label>Выберите способ решения</label>
                       <input
+                          style={{paddingLeft: 20}}
                           onClick={handleDrop}
                           onChange={() => console.log('')}
                           className='solver'

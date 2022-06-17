@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from "axios";
 import '../App.css';
+import {Input} from "./Input";
 
 interface RungeKuttaProps {
     refactorEquation: any,
@@ -90,48 +91,60 @@ export function RungeKutta({ refactorEquation, setChartData, type }: RungeKuttaP
         <div>
             <div className="input">
                 <div style={{display: "flex", flexDirection: "row", alignItems: "center", position: "relative"}}>
-                    <input
-                        onChange={(e) => {
-                            setData({...data, equation: e.target.value})
-                        }}
-                        placeholder='Введите уравнение'
-                    />
+                    <Input onChange={(e: any) => setData({...data, equation: e.target.value})}>
+                        <label className="label">
+                            y<sub>1</sub>' =
+                        </label>
+                    </Input>
                     {!secondEquation && type === 'adams' && <button className="plus" onClick={() => setSecondEquation(true)}>+</button>}
                 </div>
 
-                {secondEquation && type === 'adams' && <div style={{display: "flex", flexDirection: "row", alignItems: "center", position: "relative"}}>
-                    <input
-                        onChange={(e) => {
-                            setData({...data, equation2: e.target.value})
-                        }}
-                        placeholder='Введите уравнение'
-                    />
-                    <button className="plus" onClick={() => setSecondEquation(false)}>-</button>
-                </div>}
+                {secondEquation && type === 'adams' &&
+                    <div style={{display: "flex", flexDirection: "row", alignItems: "center", position: "relative"}}>
+                        <Input onChange={(e: any) => setData({...data, equation2: e.target.value})}>
+                            <label className="label">
+                                y<sub>2</sub>' =
+                            </label>
+                        </Input>
+                        <button className="plus" onClick={() => setSecondEquation(false)}>-</button>
+                    </div>
+                }
 
-                <input
-                    onChange={(e) => setData({...data, y: e.target.value})}
-                    placeholder='y0'
-                />
-                {secondEquation && type === 'adams' && <input
-                    onChange={(e) => setData({...data, yy: e.target.value})}
-                    placeholder='x0'
-                />}
-                <input
-                    onChange={(e) => setData({...data, from: e.target.value})}
-                    placeholder='От'
-                />
-                <input
-                    onChange={(e) => setData({...data, to: e.target.value})}
-                    placeholder='До'
-                />
-                <input
-                    onChange={(e) => setData({...data, step: e.target.value})}
-                    placeholder='Шаг'
-                />
+                <Input onChange={(e: any) => setData({...data, y: e.target.value})}>
+                    <label className="label">
+                        y(0) =
+                    </label>
+                </Input>
+                {secondEquation && type === 'adams' &&
+                    <Input onChange={(e: any) => setData({...data, yy: e.target.value})}>
+                        <label className="label">
+                            x(0) =
+                        </label>
+                    </Input>
+                }
+                <Input onChange={(e: any) => setData({...data, from: e.target.value})}>
+                    <label className="label">
+                        от:
+                    </label>
+                </Input>
+                <Input onChange={(e: any) => setData({...data, to: e.target.value})}>
+                    <label className="label">
+                        до:
+                    </label>
+                </Input>
+                <Input onChange={(e: any) => setData({...data, step: e.target.value})}>
+                    <label className="label">
+                        шаг:
+                    </label>
+                </Input>
             </div>
             <div className="buttons">
-                <button className='solution' onClick={() => type === 'runge_kutta' ? handleSolve() : secondEquation ? handleAdamsSystem() : handleAdams()} disabled={loading}>{!loading ? 'Решение' : 'Идёт решение...'}</button>
+                <button
+                    className='solution'
+                    onClick={() => type === 'runge_kutta' ? handleSolve() : secondEquation ? handleAdamsSystem() : handleAdams()}
+                    disabled={loading}>
+                    {!loading ? 'Решение' : 'Идёт решение...'}
+                </button>
             </div>
         </div>
     )
