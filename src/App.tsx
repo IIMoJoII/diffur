@@ -32,7 +32,7 @@ export const Formula: React.FC<FormulaProps> = ({equation}) => {
             >
                 <div>
                     <MJ.Text text={`$$ y' = ${equation?.equation || ''} $$`}/>
-                    {equation?.equation2 && <MJ.Text text={`$$ x' = ${equation?.equation2 || ''} $$`}/>}
+                    {equation?.equation2 && <MJ.Text text={`$$ y' = ${equation?.equation2 || ''} $$`}/>}
                     <MJ.Text text={`$$ x ∈ [${equation?.from || ''}; ${equation?.to || ''}] $$`}/>
                     {equation?.y && <MJ.Text text={`$$ y(0) = ${equation?.y || ''} $$`}/>}
                     {equation?.yy && <MJ.Text text={`$$ x(0) = ${equation?.yy || ''} $$`}/>}
@@ -66,7 +66,7 @@ function App() {
 
     const types = [
         {name: 'Метод Адамса', id: 'adams'},
-        {name: 'Альфа-устойчивый метод Рунге-Кутта', id: 'runge_kutta'},
+        {name: 'Метод Рунге-Кутта', id: 'runge_kutta'},
     ]
 
 
