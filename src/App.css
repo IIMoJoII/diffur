@@ -69,7 +69,6 @@
 .input input {
   width: 100%;
   height: 40px;
-  padding-left: 20px;
   outline: none;
   font-size: 16px;
   margin-top: 10px;
@@ -228,4 +227,25 @@ th, td {
 .plus:hover {
   background: #ea9902;
   color: white;
+}
+
+.equationWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.brace {
+
+  height: 100px;
+  background: red;
+}
+
+.label {
+  width: 15%;
+  margin-top: 6px;
+}
+
+.Input {
+  width: 80%;
 }
