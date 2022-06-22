@@ -71,8 +71,8 @@ function App() {
     }
 
     const types = [
-        {name: 'Метод Адамса', id: 'adams'},
-        {name: 'Альфа-устойчивый метод Рунге-Кутта', id: 'runge_kutta'},
+        {name: 'Метод Адамса-Башфорта', id: 'adams'},
+        {name: 'Рунге-Кутта 4-го порядка', id: 'runge_kutta'},
     ]
 
 
