@@ -22,13 +22,12 @@ export function RungeKutta({ refactorEquation, setChartData, type }: RungeKuttaP
     const [secondEquation, setSecondEquation] = useState(false)
     const [loading, setLoading] = useState(false)
 
-    // Отправляем данные на сервер
-    const handleSolve = async () => {
+    const solve = async (method = "") => {
         setLoading(true)
         // Запрос на сервер
         const res = await axios({
             method: 'post',
-            url: 'http://localhost:5000/solveRungeKutta',
+            url: `http://localhost:5000/${method}`,
             data: {
                 equation: data.equation,
                 from: data.from,
@@ -38,24 +37,6 @@ export function RungeKutta({ refactorEquation, setChartData, type }: RungeKuttaP
             }
         });
 
-        setLoading(false)
-        // Полученные с сервера данные записываем в график
-        setChartData(res.data)
-    }
-
-    const handleAdams = async () => {
-        setLoading(true)
-        const res = await axios({
-            method: 'post',
-            url: 'http://localhost:5000/solveAdams',
-            data: {
-                equation: data.equation,
-                from: data.from,
-                to: data.to,
-                step: data.step,
-                y: data.y
-            }
-        });
 
         setLoading(false)
         // Полученные с сервера данные записываем в график
@@ -81,6 +62,17 @@ export function RungeKutta({ refactorEquation, setChartData, type }: RungeKuttaP
         setLoading(false)
         // Полученные с сервера данные записываем в график
         setChartData(res.data)
+    }
+
+    const solvation = () => {
+        type === 'runge_kutta' && solve('solveRungeKutta')
+        type === 'adams' && !secondEquation && solve('solveAdams')
+        type === 'adams' && secondEquation && handleAdamsSystem()
+        type === 'predictCorrection' && solve('solvePredictCorrection')
+        type === 'adamsMulton' && solve('solveAdamsMulton')
+        type === 'euler' && solve('solveEuler')
+        type === 'modifiedEuler' && solve('solveModifiedEuler')
+
     }
 
     React.useEffect(() => {
@@ -141,7 +133,7 @@ export function RungeKutta({ refactorEquation, setChartData, type }: RungeKuttaP
             <div className="buttons">
                 <button
                     className='solution'
-                    onClick={() => type === 'runge_kutta' ? handleSolve() : secondEquation ? handleAdamsSystem() : handleAdams()}
+                    onClick={() => solvation()}
                     disabled={loading}>
                     {!loading ? 'Решение' : 'Идёт решение...'}
                 </button>

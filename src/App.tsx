@@ -32,6 +32,7 @@ export const Formula: React.FC<FormulaProps> = ({equation}) => {
                 }}
             >
                 <div>
+
                     <div className="equationWrapper">
                         <div>
                             {equation?.equation && <MJ.Text text={`$$ y_1' = ${equation?.equation || ''} $$`}/>}
@@ -72,7 +73,11 @@ function App() {
 
     const types = [
         {name: 'Метод Адамса-Башфорта', id: 'adams'},
-        {name: 'Рунге-Кутта 4-го порядка', id: 'runge_kutta'},
+        {name: 'Метод Рунге-Кутта 4-го порядка', id: 'runge_kutta'},
+        {name: 'Метод прогноза-коррекции', id: 'predictCorrection'},
+        {name: 'Метод Адамса-Мултона', id: 'adamsMulton'},
+        {name: 'Метод Эйлера', id: 'euler'},
+        {name: 'Модифицированный метод Эйлера', id: 'modifiedEuler'},
     ]
 
 
